@@ -1,0 +1,67 @@
+[gd_scene load_steps=6 format=3 uid="uid://crugqulne3ads"]
+
+[ext_resource type="Script" uid="uid://dgjxvjoxb3ys5" path="res://Control.gd" id="1_ytqi1"]
+[ext_resource type="Texture2D" uid="uid://jtwou126tgb0" path="res://icon.svg" id="2_uxj08"]
+
+[sub_resource type="GDScript" id="GDScript_uxj08"]
+script/source = "extends CharacterBody2D
+		#if not is_on_floor():
+			#velocity += get_gravity() * delta
+		#if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor():
+			#velocity.y = JUMP_VELOCITY
+var ski = true
+
+
+const SPEED = 300.0
+const JUMP_VELOCITY = -400.0
+
+
+func _physics_process(delta: float) -> void:
+	ski = true
+	if ski == true:
+		var input_vector = Vector2.ZERO
+		input_vector.x -= 1
+		if Input.is_action_pressed(\"ui_w\"):
+			input_vector.y -= 1
+		if Input.is_action_pressed(\"ui_s\"):
+			input_vector.y += 1
+		velocity = input_vector * 300
+	move_and_slide()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_40ysb"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pmfob"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_uxj08")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_ytqi1")
+
+[node name="Ski" type="Node2D" parent="."]
+
+[node name="Character" type="Node2D" parent="Ski"]
+
+[node name="Skier" type="CharacterBody2D" parent="Ski/Character"]
+script = SubResource("GDScript_uxj08")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ski/Character/Skier"]
+shape = SubResource("RectangleShape2D_40ysb")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Ski/Character/Skier"]
+sprite_frames = SubResource("SpriteFrames_pmfob")
+
+[node name="Terrain" type="Node2D" parent="Ski"]
+
+[node name="Sprite2D" type="Sprite2D" parent="Ski/Terrain"]
+position = Vector2(13, -187)
+texture = ExtResource("2_uxj08")
+
+[node name="Camera2D" type="Camera2D" parent="."]
