@@ -1,4 +1,4 @@
-[gd_scene load_steps=104 format=4 uid="uid://crugqulne3ads"]
+[gd_scene load_steps=110 format=4 uid="uid://crugqulne3ads"]
 
 [ext_resource type="Script" uid="uid://dgjxvjoxb3ys5" path="res://Control.gd" id="1_ytqi1"]
 [ext_resource type="Texture2D" uid="uid://jtwou126tgb0" path="res://icon.svg" id="2_uxj08"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bkf0rdtiy134k" path="res://images/Imager/Orange.webp" id="6_kcr1n"]
 [ext_resource type="Texture2D" uid="uid://c84pdq2kkno4h" path="res://images/Imager/Scarf.png" id="6_kj7dd"]
 [ext_resource type="Texture2D" uid="uid://rbkopmefqbsx" path="res://images/Imager/Pink.webp" id="7_oq3b2"]
+[ext_resource type="Texture2D" uid="uid://58ssi5yjg3jl" path="res://images/Imager/Carrot.png" id="7_vshwg"]
 [ext_resource type="Texture2D" uid="uid://chnvcp5y0exxj" path="res://images/Imager/Purple1.webp" id="8_ig7b5"]
 [ext_resource type="Texture2D" uid="uid://6s37vb58b54j" path="res://images/Imager/Purple.webp" id="9_gk7ga"]
 [ext_resource type="Texture2D" uid="uid://5h5oqavg3ai" path="res://images/Imager/Red.webp" id="10_yb4u5"]
@@ -21,6 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://dq35hddst1ufa" path="res://images/Imager/Coalsingle.png" id="15_yb4u5"]
 [ext_resource type="Texture2D" uid="uid://b787won5p0ant" path="res://images/Imager/Fire.png" id="16_yb4u5"]
 [ext_resource type="Texture2D" uid="uid://dniooekubeuhv" path="res://images/Imager/ScarfForSnowman.png" id="18_kj7dd"]
+[ext_resource type="Texture2D" uid="uid://hhyeg5y1g1a4" path="res://images/Imager/Nose.png" id="20_52ycr"]
 [ext_resource type="Texture2D" uid="uid://dfsyhllcqo52i" path="res://images/Imager/Suitcase.png" id="21_amhqy"]
 
 [sub_resource type="GDScript" id="GDScript_40ysb"]
@@ -56,6 +58,8 @@ var coal = false
 var snowmanarea = true
 var suitcase = false
 var holding = false
+var carrotarea = false
+var carrot = true
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 func _ready() -> void:
@@ -167,7 +171,16 @@ func _physics_process(delta: float) -> void:
 				$\"../../../House/Room 5/Suitcase/Hat\".play(\"Nothing\")
 				$\"../../../House/Room 5/Suitcase/Scarf\".play(\"Nothing\")
 				holding = true
-	
+	if carrotarea == true:
+		if Input.is_action_just_pressed(\"ui_f\"):
+			if carrot == true:
+				$\"../../../House/Room2/Carrot/Carrot\".play(\"Carrot\")
+				$Carrot.play(\"Nothing\")
+				carrot = false
+			else:
+				$\"../../../House/Room2/Carrot/Carrot\".play(\"Nothing\")
+				$Carrot.play(\"Carrot\")
+				carrot = true
 	
 	
 	
@@ -191,6 +204,10 @@ func _physics_process(delta: float) -> void:
 				holding = false
 				$Hat.play(\"Nothing\")
 				$Scarf.play(\"Nothing\")
+			if carrot == true:
+				$Carrot.play(\"Nothing\")
+				$\"../../../Snowman/Figure/Carrot\".play(\"Carrot\")
+				carrot = false
 
 
 
@@ -323,6 +340,17 @@ func _on_suitcasearea_body_entered(body: Node2D) -> void:
 func _on_suitcasearea_body_exited(body: Node2D) -> void:
 	if body is CharacterBody2D:
 		suitcase = false
+
+
+
+func _on_carrot_2_body_entered(body: Node2D) -> void:
+	if body is CharacterBody2D:
+		carrotarea = true
+
+
+func _on_carrot_2_body_exited(body: Node2D) -> void:
+	if body is CharacterBody2D:
+		carrotarea = false
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_40ysb"]
@@ -420,6 +448,25 @@ animations = [{
 }],
 "loop": true,
 "name": &"Scarf",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jrdhe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_vshwg")
+}],
+"loop": true,
+"name": &"Carrot",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"Nothing",
 "speed": 5.0
 }]
 
@@ -17030,6 +17077,25 @@ animations = [{
 }],
 "loop": true,
 "name": &"Scarf",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_lhnem"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("20_52ycr")
+}],
+"loop": true,
+"name": &"Carrot",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"Nothing",
 "speed": 5.0
 }]
 
@@ -36685,6 +36751,28 @@ size = Vector2(836, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o8v2d"]
 size = Vector2(108, 265)
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_u7w0r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_vshwg")
+}],
+"loop": true,
+"name": &"Carrot",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"Nothing",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ert0u"]
+size = Vector2(172.535, 181.51239)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_peyt7"]
 size = Vector2(16, 282)
 
@@ -36804,6 +36892,11 @@ autoplay = "Nothing"
 [node name="Scarf" type="AnimatedSprite2D" parent="Ski/Character/Skier"]
 sprite_frames = SubResource("SpriteFrames_rhr2q")
 animation = &"Scarf"
+autoplay = "Nothing"
+
+[node name="Carrot" type="AnimatedSprite2D" parent="Ski/Character/Skier"]
+sprite_frames = SubResource("SpriteFrames_jrdhe")
+animation = &"Carrot"
 autoplay = "Nothing"
 
 [node name="Snowball" type="Path2D" parent="Ski/Character"]
@@ -36964,6 +37057,14 @@ sprite_frames = SubResource("SpriteFrames_7k27k")
 animation = &"Scarf"
 autoplay = "Nothing"
 
+[node name="Carrot" type="AnimatedSprite2D" parent="Snowman/Figure"]
+z_index = 21
+position = Vector2(18.99997, -149.99997)
+scale = Vector2(3.2700005, 4.0599995)
+sprite_frames = SubResource("SpriteFrames_lhnem")
+animation = &"Carrot"
+autoplay = "Nothing"
+
 [node name="Tiles" type="Node2D" parent="Snowman"]
 
 [node name="Hard" type="TileMapLayer" parent="Snowman/Tiles"]
@@ -37084,6 +37185,23 @@ position = Vector2(627, -2)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="House/Room2/r2r/r2r"]
 position = Vector2(26, 122.5)
 shape = SubResource("RectangleShape2D_o8v2d")
+
+[node name="Carrot" type="Node2D" parent="House/Room2"]
+
+[node name="Carrot" type="AnimatedSprite2D" parent="House/Room2/Carrot"]
+z_index = 20
+position = Vector2(79, 30.5)
+scale = Vector2(2.58, 1.61)
+sprite_frames = SubResource("SpriteFrames_u7w0r")
+animation = &"Nothing"
+autoplay = "Carrot"
+
+[node name="Carrot2" type="Area2D" parent="House/Room2/Carrot"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="House/Room2/Carrot/Carrot2"]
+position = Vector2(72.20972, 95.78815)
+rotation = -1.5760646
+shape = SubResource("RectangleShape2D_ert0u")
 
 [node name="Room3" type="Node2D" parent="House"]
 position = Vector2(2000, 0)
@@ -37223,6 +37341,8 @@ position = Vector2(-443, -1273)
 [connection signal="body_entered" from="House/Room1/r1r/r1r" to="Ski/Character/Skier" method="_on_r_1r_body_entered"]
 [connection signal="body_entered" from="House/Room1/r1b/Return house" to="Ski/Character/Skier" method="_on_return_house_body_entered"]
 [connection signal="body_entered" from="House/Room2/r2r/r2r" to="Ski/Character/Skier" method="_on_r_2r_body_entered"]
+[connection signal="body_entered" from="House/Room2/Carrot/Carrot2" to="Ski/Character/Skier" method="_on_carrot_2_body_entered"]
+[connection signal="body_exited" from="House/Room2/Carrot/Carrot2" to="Ski/Character/Skier" method="_on_carrot_2_body_exited"]
 [connection signal="body_entered" from="House/Room3/r3r/r3r" to="Ski/Character/Skier" method="_on_r_3r_body_entered"]
 [connection signal="body_entered" from="House/Room3/r3c/r3c" to="Ski/Character/Skier" method="_on_r_3c_body_entered"]
 [connection signal="body_entered" from="House/Room3/r3l/rcl" to="Ski/Character/Skier" method="_on_rcl_body_entered"]
