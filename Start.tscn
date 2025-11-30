@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=4 uid="uid://ojdybb05spa1"]
+[gd_scene load_steps=22 format=4 uid="uid://ojdybb05spa1"]
 
 [ext_resource type="Texture2D" uid="uid://bp365xbsunp5h" path="res://images/Imager/Grey.webp" id="1_xhal0"]
 [ext_resource type="Texture2D" uid="uid://jtwou126tgb0" path="res://icon.svg" id="2_b54qk"]
@@ -2923,10 +2923,6 @@ func _physics_process(delta: float) -> void:
 		imput_vector.x += 1
 	velocity = imput_vector*300
 	move_and_slide()
-
-
-func _on_area_2d_3_body_entered(body: Node2D) -> void:
-	pass # Replace with function body.
 "
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_ox2dk"]
@@ -2943,12 +2939,31 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_otolu"]
 size = Vector2(79, 81)
 
+[sub_resource type="SpriteFrames" id="SpriteFrames_b54qk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"Area",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_smcay")
+}],
+"loop": true,
+"name": &"Key",
+"speed": 5.0
+}]
+
 [sub_resource type="GDScript" id="GDScript_profp"]
 script/source = "extends Node2D
 
-var v = false
-var k = false
-var l = false
+var indoorarea = false
+var inkeyarea = false
+var holdingthekey = false
 var openthegame = false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -2957,38 +2972,40 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if k == true:
+	if inkeyarea == true:
 		if Input.is_action_just_pressed(\"ui_f\"):
-			l = true
+			holdingthekey = true
 			$Key.play(\"nKEY\")
-	if v == true:
+			$\"../CharacterBody2D/Keysprite\".play(\"Key\")
+	if indoorarea == true:
 		if Input.is_action_just_pressed(\"ui_f\"):
-			if l == true:
+			if holdingthekey == true:
 				$Door.play(\"Open\")
 				$Door2.play(\"Open\")
 				$R2.play(\"Open\")
 				$R.play(\"Open\")
+				$\"../CharacterBody2D/Keysprite\".play(\"Area\")
 				openthegame = true
 
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D:
-		v = true
+		indoorarea = true
 
 
 func _on_area_2d_body_exited(body: Node2D) -> void:
 	if body is CharacterBody2D:
-		v = false
+		indoorarea = false
 
 
 func _on_area_2d_2_body_entered(body: Node2D) -> void:
 	if body is CharacterBody2D:
-		k = true
+		inkeyarea = true
 
 
 func _on_area_2d_2_body_exited(body: Node2D) -> void:
 	if body is CharacterBody2D:
-		k = false
+		inkeyarea = false
 
 
 func _on_area_2d_3_body_entered(body: Node2D) -> void:
@@ -3098,6 +3115,13 @@ sprite_frames = SubResource("SpriteFrames_ox2dk")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 position = Vector2(0.5, 2.5)
 shape = SubResource("RectangleShape2D_otolu")
+
+[node name="Keysprite" type="AnimatedSprite2D" parent="CharacterBody2D"]
+position = Vector2(47.500004, -4.4999924)
+scale = Vector2(3.89, 3.17)
+sprite_frames = SubResource("SpriteFrames_b54qk")
+animation = &"Area"
+autoplay = "Area"
 
 [node name="Node2D" type="Node2D" parent="."]
 script = SubResource("GDScript_profp")
