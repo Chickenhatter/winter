@@ -1,4 +1,4 @@
-[gd_scene load_steps=93 format=4 uid="uid://crugqulne3ads"]
+[gd_scene load_steps=104 format=4 uid="uid://crugqulne3ads"]
 
 [ext_resource type="Script" uid="uid://dgjxvjoxb3ys5" path="res://Control.gd" id="1_ytqi1"]
 [ext_resource type="Texture2D" uid="uid://jtwou126tgb0" path="res://icon.svg" id="2_uxj08"]
@@ -6,8 +6,10 @@
 [ext_resource type="Texture2D" uid="uid://d4fx34ouyfvk7" path="res://images/Imager/Blue.webp" id="3_vi7eg"]
 [ext_resource type="Texture2D" uid="uid://t77mx472i73s" path="res://images/Imager/Green.webp" id="4_ecbbc"]
 [ext_resource type="Texture2D" uid="uid://cur04m0o6jb6j" path="res://images/Imager/coal.png" id="4_gk7ga"]
+[ext_resource type="Texture2D" uid="uid://yykvotoqfyme" path="res://images/Imager/Hat.png" id="5_peyt7"]
 [ext_resource type="Texture2D" uid="uid://bp365xbsunp5h" path="res://images/Imager/Grey.webp" id="5_vy1ec"]
 [ext_resource type="Texture2D" uid="uid://bkf0rdtiy134k" path="res://images/Imager/Orange.webp" id="6_kcr1n"]
+[ext_resource type="Texture2D" uid="uid://c84pdq2kkno4h" path="res://images/Imager/Scarf.png" id="6_kj7dd"]
 [ext_resource type="Texture2D" uid="uid://rbkopmefqbsx" path="res://images/Imager/Pink.webp" id="7_oq3b2"]
 [ext_resource type="Texture2D" uid="uid://chnvcp5y0exxj" path="res://images/Imager/Purple1.webp" id="8_ig7b5"]
 [ext_resource type="Texture2D" uid="uid://6s37vb58b54j" path="res://images/Imager/Purple.webp" id="9_gk7ga"]
@@ -18,6 +20,8 @@
 [ext_resource type="Texture2D" uid="uid://q4xb6wt1onh6" path="res://images/Imager/Wood.png" id="15_oq3b2"]
 [ext_resource type="Texture2D" uid="uid://dq35hddst1ufa" path="res://images/Imager/Coalsingle.png" id="15_yb4u5"]
 [ext_resource type="Texture2D" uid="uid://b787won5p0ant" path="res://images/Imager/Fire.png" id="16_yb4u5"]
+[ext_resource type="Texture2D" uid="uid://dniooekubeuhv" path="res://images/Imager/ScarfForSnowman.png" id="18_kj7dd"]
+[ext_resource type="Texture2D" uid="uid://dfsyhllcqo52i" path="res://images/Imager/Suitcase.png" id="21_amhqy"]
 
 [sub_resource type="GDScript" id="GDScript_40ysb"]
 script/source = "extends Node2D
@@ -50,7 +54,8 @@ var currentSpeed = 0.5
 var infireplace = false
 var coal = false
 var snowmanarea = true
-
+var suitcase = false
+var holding = false
 const SPEED = 300.0
 const JUMP_VELOCITY = -400.0
 func _ready() -> void:
@@ -97,7 +102,6 @@ func _physics_process(delta: float) -> void:
 			input_vector.y -= 0
 			z = false
 			hubwalk = true
-			print(\"Works?\")
 			$\"../Snowball/PathFollow2D/AnimatedSprite2D\".play(\"Nothing\")
 			move = true
 			currentSpeed = 0.5
@@ -149,6 +153,27 @@ func _physics_process(delta: float) -> void:
 				coal = true
 			else:
 				$\"../../../House/Room1/Fireplace/Fire\".play(\"Fire\")
+	if suitcase == true:
+		if Input.is_action_just_pressed(\"ui_f\"):
+			if holding == true:
+				$Hat.play(\"Nothing\")
+				$Scarf.play(\"Nothing\")
+				$\"../../../House/Room 5/Suitcase/Hat\".play(\"Hat\")
+				$\"../../../House/Room 5/Suitcase/Scarf\".play(\"Scarf\")
+				holding = false
+			else:
+				$Hat.play(\"Hat\")
+				$Scarf.play(\"Scarf\")
+				$\"../../../House/Room 5/Suitcase/Hat\".play(\"Nothing\")
+				$\"../../../House/Room 5/Suitcase/Scarf\".play(\"Nothing\")
+				holding = true
+	
+	
+	
+	
+	
+	
+	
 	if snowmanarea == true:
 		if Input.is_action_pressed(\"ui_f\"):
 			if coal == true:
@@ -160,6 +185,12 @@ func _physics_process(delta: float) -> void:
 				coal = false
 				$coal.play(\"NoCoal\")
 				$Coalgrabber.play(\"Nothing\")
+			if holding == true:
+				$\"../../../Snowman/Figure/Hat\".play(\"Hat\")
+				$\"../../../Snowman/Figure/Scarf\".play(\"Scarf\")
+				holding = false
+				$Hat.play(\"Nothing\")
+				$Scarf.play(\"Nothing\")
 
 
 
@@ -174,7 +205,6 @@ func _on_stop_the_player_body_entered(body: Node2D) -> void:
 func _on_finish_the_snowball_area_entered(_area: Area2D) -> void:
 	z = false
 	hubwalk = true
-	print(\"Works?\")
 	$\"../Snowball/PathFollow2D/AnimatedSprite2D\".play(\"Nothing\")
 	move = true
 	currentSpeed = 0.5
@@ -271,7 +301,8 @@ func _on_fireplace_body_entered(body: Node2D) -> void:
 
 
 func _on_fireplace_body_exited(body: Node2D) -> void:
-	infireplace = false
+	if body is CharacterBody2D:
+		infireplace = false
 
 
 func _on_snowman_area_body_entered(body: Node2D) -> void:
@@ -282,6 +313,16 @@ func _on_snowman_area_body_entered(body: Node2D) -> void:
 func _on_snowman_area_body_exited(body: Node2D) -> void:
 	if body is CharacterBody2D:
 		snowmanarea = false
+
+
+func _on_suitcasearea_body_entered(body: Node2D) -> void:
+	if body is CharacterBody2D:
+		suitcase = true
+
+
+func _on_suitcasearea_body_exited(body: Node2D) -> void:
+	if body is CharacterBody2D:
+		suitcase = false
 "
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_40ysb"]
@@ -341,6 +382,44 @@ animations = [{
 }],
 "loop": true,
 "name": &"NoCoal",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_52ycr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_peyt7")
+}],
+"loop": true,
+"name": &"Hat",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"Nothing",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rhr2q"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"Nothing",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_kj7dd")
+}],
+"loop": true,
+"name": &"Scarf",
 "speed": 5.0
 }]
 
@@ -16913,6 +16992,44 @@ animations = [{
 }],
 "loop": true,
 "name": &"NoDecorate",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rji4o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_peyt7")
+}],
+"loop": true,
+"name": &"Hat",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"Nothing",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_7k27k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"Nothing",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_kj7dd")
+}],
+"loop": true,
+"name": &"Scarf",
 "speed": 5.0
 }]
 
@@ -36605,6 +36722,47 @@ size = Vector2(108, 138)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_52ycr"]
 size = Vector2(655, 16)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rji4o"]
+size = Vector2(325, 194.96179)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hedmm"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_peyt7")
+}],
+"loop": true,
+"name": &"Hat",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"Nothing",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_whyg1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"Nothing",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_kj7dd")
+}],
+"loop": true,
+"name": &"Scarf",
+"speed": 5.0
+}]
+
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_ytqi1")
 
@@ -36637,6 +36795,16 @@ scale = Vector2(0.43, 0.44)
 sprite_frames = SubResource("SpriteFrames_kj7dd")
 animation = &"Coal"
 autoplay = "NoCoal"
+
+[node name="Hat" type="AnimatedSprite2D" parent="Ski/Character/Skier"]
+sprite_frames = SubResource("SpriteFrames_52ycr")
+animation = &"Hat"
+autoplay = "Nothing"
+
+[node name="Scarf" type="AnimatedSprite2D" parent="Ski/Character/Skier"]
+sprite_frames = SubResource("SpriteFrames_rhr2q")
+animation = &"Scarf"
+autoplay = "Nothing"
 
 [node name="Snowball" type="Path2D" parent="Ski/Character"]
 curve = SubResource("Curve2D_vy1ec")
@@ -36714,7 +36882,7 @@ script = SubResource("GDScript_ecbbc")
 [node name="Snow1" type="AnimatedSprite2D" parent="Snowman/Figure"]
 z_index = -9
 sprite_frames = SubResource("SpriteFrames_vy1ec")
-animation = &"Nothing"
+animation = &"Snow"
 autoplay = "Nothing"
 
 [node name="Snow2" type="AnimatedSprite2D" parent="Snowman/Figure"]
@@ -36722,7 +36890,7 @@ z_index = 10
 position = Vector2(-2, -71)
 scale = Vector2(0.86, 0.88)
 sprite_frames = SubResource("SpriteFrames_oq3b2")
-animation = &"Nothing"
+animation = &"Snow"
 autoplay = "Nothing"
 
 [node name="Snow3" type="AnimatedSprite2D" parent="Snowman/Figure"]
@@ -36730,7 +36898,7 @@ z_index = 10
 position = Vector2(-3, -136)
 scale = Vector2(0.72, 0.73)
 sprite_frames = SubResource("SpriteFrames_ig7b5")
-animation = &"Nothing"
+animation = &"Snow"
 autoplay = "Nothing"
 
 [node name="Snowman area" type="Area2D" parent="Snowman/Figure"]
@@ -36758,7 +36926,7 @@ autoplay = "NoDecorate"
 
 [node name="Coal3" type="AnimatedSprite2D" parent="Snowman/Figure/Coal"]
 z_index = 20
-position = Vector2(-1, -79)
+position = Vector2(-1, -38)
 scale = Vector2(0.31, 0.32)
 sprite_frames = SubResource("SpriteFrames_vshwg")
 animation = &"Coal"
@@ -36779,6 +36947,22 @@ scale = Vector2(0.31, 0.32)
 sprite_frames = SubResource("SpriteFrames_vshwg")
 animation = &"Coal"
 autoplay = "NoDecorate"
+
+[node name="Hat" type="AnimatedSprite2D" parent="Snowman/Figure"]
+z_index = 20
+position = Vector2(29, -189.99998)
+scale = Vector2(3.77, 3.34)
+sprite_frames = SubResource("SpriteFrames_rji4o")
+animation = &"Hat"
+autoplay = "Nothing"
+
+[node name="Scarf" type="AnimatedSprite2D" parent="Snowman/Figure"]
+z_index = 20
+position = Vector2(12.000181, -101)
+scale = Vector2(2.1000102, 1.4)
+sprite_frames = SubResource("SpriteFrames_7k27k")
+animation = &"Scarf"
+autoplay = "Nothing"
 
 [node name="Tiles" type="Node2D" parent="Snowman"]
 
@@ -36991,6 +37175,38 @@ position = Vector2(2000, -1000)
 position = Vector2(25.5, 375)
 shape = SubResource("RectangleShape2D_52ycr")
 
+[node name="Suitcase" type="Node2D" parent="House/Room 5"]
+
+[node name="Suitcase" type="Sprite2D" parent="House/Room 5/Suitcase"]
+position = Vector2(457, -104.999954)
+rotation = 0.31346166
+scale = Vector2(2.761272, 2.8076904)
+texture = ExtResource("21_amhqy")
+
+[node name="Suitcasearea" type="Area2D" parent="House/Room 5/Suitcase"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="House/Room 5/Suitcase/Suitcasearea"]
+position = Vector2(448.88318, -120.403076)
+rotation = 0.3572504
+scale = Vector2(0.9999999, 0.9999999)
+shape = SubResource("RectangleShape2D_rji4o")
+
+[node name="Hat" type="AnimatedSprite2D" parent="House/Room 5/Suitcase"]
+position = Vector2(424.00003, -136.99994)
+rotation = 0.41084772
+scale = Vector2(1.7000006, 1.7403588)
+sprite_frames = SubResource("SpriteFrames_hedmm")
+animation = &"Hat"
+autoplay = "Hat"
+
+[node name="Scarf" type="AnimatedSprite2D" parent="House/Room 5/Suitcase"]
+position = Vector2(484.28555, -114.65867)
+rotation = 0.4744345
+scale = Vector2(1.4428729, 1.3321826)
+sprite_frames = SubResource("SpriteFrames_whyg1")
+animation = &"Scarf"
+autoplay = "Scarf"
+
 [node name="This node has no purpous but for me to edit an area" type="Node2D" parent="."]
 position = Vector2(-443, -1273)
 
@@ -37014,3 +37230,5 @@ position = Vector2(-443, -1273)
 [connection signal="body_entered" from="House/Room4/Coal grabber/CoalGrabber" to="Ski/Character/Skier" method="_on_coal_grabber_body_entered"]
 [connection signal="body_exited" from="House/Room4/Coal grabber/CoalGrabber" to="Ski/Character/Skier" method="_on_coal_grabber_body_exited"]
 [connection signal="body_entered" from="House/Room 5/r5b/r5b" to="Ski/Character/Skier" method="_on_r_5b_body_entered"]
+[connection signal="body_entered" from="House/Room 5/Suitcase/Suitcasearea" to="Ski/Character/Skier" method="_on_suitcasearea_body_entered"]
+[connection signal="body_exited" from="House/Room 5/Suitcase/Suitcasearea" to="Ski/Character/Skier" method="_on_suitcasearea_body_exited"]
