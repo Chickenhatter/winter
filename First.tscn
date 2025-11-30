@@ -36741,6 +36741,7 @@ shape = SubResource("CircleShape2D_aaiac")
 [node name="Coal" type="Node2D" parent="Snowman/Figure"]
 
 [node name="Coal" type="AnimatedSprite2D" parent="Snowman/Figure/Coal"]
+z_index = 20
 position = Vector2(-2, -52)
 scale = Vector2(0.31, 0.32)
 sprite_frames = SubResource("SpriteFrames_vshwg")
@@ -36748,6 +36749,7 @@ animation = &"Coal"
 autoplay = "NoDecorate"
 
 [node name="Coal2" type="AnimatedSprite2D" parent="Snowman/Figure/Coal"]
+z_index = 20
 position = Vector2(-2, -66)
 scale = Vector2(0.31, 0.32)
 sprite_frames = SubResource("SpriteFrames_vshwg")
@@ -36755,6 +36757,7 @@ animation = &"Coal"
 autoplay = "NoDecorate"
 
 [node name="Coal3" type="AnimatedSprite2D" parent="Snowman/Figure/Coal"]
+z_index = 20
 position = Vector2(-1, -79)
 scale = Vector2(0.31, 0.32)
 sprite_frames = SubResource("SpriteFrames_vshwg")
@@ -36762,6 +36765,7 @@ animation = &"Coal"
 autoplay = "NoDecorate"
 
 [node name="Coal4" type="AnimatedSprite2D" parent="Snowman/Figure/Coal"]
+z_index = 20
 position = Vector2(-14, -135)
 scale = Vector2(0.31, 0.32)
 sprite_frames = SubResource("SpriteFrames_vshwg")
@@ -36769,6 +36773,7 @@ animation = &"Coal"
 autoplay = "NoDecorate"
 
 [node name="Coal5" type="AnimatedSprite2D" parent="Snowman/Figure/Coal"]
+z_index = 20
 position = Vector2(10, -135)
 scale = Vector2(0.31, 0.32)
 sprite_frames = SubResource("SpriteFrames_vshwg")
